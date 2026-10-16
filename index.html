@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Missão Tireoide</title>
+
+<style>
+
+:root{--pink:#d86b9f;--dark:#713752;--light:#fff1f7;--white:#fff}
+
+*{box-sizing:border-box}
+
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,#fff7fb,#f9e1ed);color:#583349;min-height:100vh}
+
+header{text-align:center;padding:25px 15px 18px;background:#fff9fc;border-bottom:1px solid #f0cbdc}
+
+.tag{font-size:11px;letter-spacing:2px;color:#a34e78;font-weight:bold}
+
+h1{color:#a94376;font-size:30px;margin:10px 0}
+
+header p{margin:0;font-size:14px}
+
+main{max-width:600px;margin:auto;padding:18px}
+
+.card{background:white;border:1px solid #f0ccdc;border-radius:22px;padding:22px;box-shadow:0 8px 25px #a34e7810}
+
+.hero{font-size:48px;text-align:center;margin:8px}
+
+h2{color:#a94376;font-size:23px}
+
+p{line-height:1.55}
+
+button{font-size:16px;font-weight:bold;border:0;border-radius:13px;padding:14px;cursor:pointer}
+
+.primary{background:var(--pink);color:white;width:100%;margin-top:14px}
+
+.option{display:block;width:100%;text-align:left;background:#fff7fb;border:1px solid #efc9db;color:#583349;margin:10px 0;line-height:1.4}
+
+.option:disabled{cursor:default;opacity:1}
+
+.option.correct{background:#e5f6e9;border-color:#62ad79}
+
+.option.wrong{background:#fff0f0;border-color:#d98282}
+
+.meta{display:flex;justify-content:space-between;font-size:13px;color:#965275;font-weight:bold;gap:8px}
+
+.track{height:7px;background:#f4dce8;border-radius:8px;margin:13px 0 22px;overflow:hidden}
+
+.bar{height:100%;background:#d86b9f;width:0;transition:width .3s}
+
+.topic{font-size:11px;letter-spacing:1.5px;color:#a34e78;font-weight:bold}
+
+.feedback{margin-top:16px;padding:14px;border-radius:12px;background:#fff2f7;line-height:1.5}
+
+.hidden{display:none}
+
+footer{text-align:center;padding:20px;font-size:12px;color:#a36b87}
+
+.small{font-size:13px;color:#81556b}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="tag">PROJETO DE EXTENSÃO</div>
+
+  <h1>🦋 Missão Tireoide</h1>
+
+  <p>Uma aventura pela ciência e pela saúde</p>
+
+</header>
+
+<main>
+
+<section id="intro" class="card">
+
+  <div class="hero">🔬🩷</div>
+
+  <h2>Agente, precisamos de você!</h2>
+
+  <p>O laboratório precisa de ajuda para investigar sinais, compreender exames e desvendar mitos sobre o câncer de tireoide.</p>
+
+  <p>Complete seis missões científicas. Cada resposta correta vale <b>100 pontos</b>!</p>
+
+  <p class="small">Temas: sintomas, diagnóstico, tratamento e mitos e verdades.</p>
+
+  <button class="primary" onclick="startGame()">Iniciar aventura ✨</button>
+
+</section>
+
+<section id="game" class="card hidden">
+
+  <div class="meta"><span id="progress">MISSÃO 1 DE 6</span><span id="score">⭐ 0 pontos</span></div>
+
+  <div class="track"><div id="bar" class="bar"></div></div>
+
+  <div id="topic" class="topic"></div>
+
+  <h2 id="questionTitle"></h2>
+
+  <p id="story"></p>
+
+  <div id="options"></div>
+
+  <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+
+  <button id="next" class="primary hidden" onclick="nextQuestion()">Próxima missão →</button>
+
+</section>
+
+<section id="result" class="card hidden">
+
+  <div class="hero">🏆🌸</div>
+
+  <h2 id="resultTitle">Missão concluída!</h2>
+
+  <p id="resultScore"></p>
+
+  <p id="resultMessage"></p>
+
+  <div id="review"></div>
+
+  <button class="primary" onclick="startGame()">Jogar novamente ↻</button>
+
+</section>
+
+</main>
+
+<footer>
+
+  MISSÃO TIREOIDE · EDUCAÇÃO EM SAÚDE<br>
+
+  Conteúdo educativo; não substitui avaliação profissional.
+
+</footer>
+
+<script>
+
+const questions=[
+
+{topic:"SINTOMAS",title:"Missão 1 — Uma pista no pescoço",story:"Uma pessoa percebeu um caroço na região do pescoço. Qual é a melhor orientação?",options:["Ignorar, pois todo nódulo é inofensivo","Procurar avaliação médica","Concluir que é câncer"],answer:1,explain:"Nódulos na tireoide são comuns e muitos são benignos. A avaliação médica ajuda a investigar a causa."},
+
+{topic:"SINTOMAS",title:"Missão 2 — Atenção aos sinais",story:"Qual alteração pode ser um sinal de alerta e merece avaliação médica?",options:["Rouquidão persistente ou dificuldade para engolir","Sentir fome depois de uma caminhada","Ter cabelo comprido"],answer:0,explain:"Um nódulo no pescoço, rouquidão persistente ou dificuldade para engolir merecem avaliação. Esses sinais não significam necessariamente câncer."},
+
+{topic:"DIAGNÓSTICO",title:"Missão 3 — Imagem investigativa",story:"Qual exame ajuda a observar a estrutura da tireoide e as características dos nódulos?",options:["Exame de visão","Ultrassonografia da tireoide","Radiografia do pé"],answer:1,explain:"A ultrassonografia permite avaliar a tireoide e os nódulos. A equipe pode solicitar outros exames conforme o caso."},
+
+{topic:"DIAGNÓSTICO",title:"Missão 4 — Análise das células",story:"Quando indicada, qual técnica pode coletar células de um nódulo para análise?",options:["Punção aspirativa por agulha fina","Teste de audição","Medição da altura"],answer:0,explain:"A punção aspirativa por agulha fina coleta material para análise. Nem todo nódulo precisa desse procedimento."},
+
+{topic:"TRATAMENTO",title:"Missão 5 — Plano personalizado",story:"O tratamento do câncer de tireoide é definido de que maneira?",options:["É igual para todas as pessoas","Depende do tipo de tumor e das características de cada caso","Não existe tratamento"],answer:1,explain:"O tratamento pode incluir cirurgia, iodo radioativo em situações selecionadas e acompanhamento, conforme avaliação especializada."},
+
+{topic:"MITOS E VERDADES",title:"Missão 6 — Desvendando um mito",story:"“Todo nódulo na tireoide é câncer.” Essa afirmação é...",options:["Verdadeira: todo nódulo é maligno","Falsa: muitos nódulos são benignos","Verdadeira: o tamanho sozinho confirma câncer"],answer:1,explain:"A maioria dos nódulos tireoidianos é benigna. A avaliação médica e os exames indicados ajudam a determinar a necessidade de investigação."}
+
+];
+
+let current=0,points=0,locked=false,results=[];
+
+function show(id){["intro","game","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
+
+function startGame(){current=0;points=0;results=[];show("game");renderQuestion()}
+
+function renderQuestion(){
+
+ locked=false;
+
+ const q=questions[current];
+
+ document.getElementById("progress").textContent=`MISSÃO ${current+1} DE ${questions.length}`;
+
+ document.getElementById("score").textContent=`⭐ ${points} pontos`;
+
+ document.getElementById("bar").style.width=`${current/questions.length*100}%`;
+
+ document.getElementById("topic").textContent=q.topic;
+
+ document.getElementById("questionTitle").textContent=q.title;
+
+ document.getElementById("story").textContent=q.story;
+
+ document.getElementById("feedback").classList.add("hidden");
+
+ document.getElementById("next").classList.add("hidden");
+
+ const area=document.getElementById("options");area.innerHTML="";
+
+ q.options.forEach((opt,i)=>{
+
+  const b=document.createElement("button");b.className="option";b.textContent=String.fromCharCode(65+i)+") "+opt;
+
+  b.onclick=()=>answer(i);area.appendChild(b);
+
+ });
+
+}
+
+function answer(i){
+
+ if(locked)return;locked=true;
+
+ const q=questions[current],correct=i===q.answer;
+
+ if(correct)points+=100;
+
+ results.push({correct,topic:q.topic});
+
+ document.querySelectorAll(".option").forEach((b,j)=>{
+
+  b.disabled=true;
+
+  if(j===q.answer)b.classList.add("correct");
+
+  else if(j===i)b.classList.add("wrong");
+
+ });
+
+ document.getElementById("score").textContent=`⭐ ${points} pontos`;
+
+ const f=document.getElementById("feedback");
+
+ f.textContent=(correct?"✅ Resposta correta! ":"💗 Vamos aprender! ")+q.explain;
+
+ f.classList.remove("hidden");
+
+ document.getElementById("next").textContent=current===questions.length-1?"Ver resultado 🏆":"Próxima missão →";
+
+ document.getElementById("next").classList.remove("hidden");
+
+}
+
+function nextQuestion(){
+
+ if(current<questions.length-1){current++;renderQuestion()}
+
+ else showResult();
+
+}
+
+function showResult(){
+
+ show("result");
+
+ document.getElementById("bar").style.width="100%";
+
+ document.getElementById("resultScore").textContent=`Sua pontuação: ${points} de ${questions.length*100} pontos.`;
+
+ let correct=results.filter(r=>r.correct).length;
+
+ document.getElementById("resultTitle").textContent=correct===6?"Agente especialista! 🏆":"Missão concluída! 🌸";
+
+ document.getElementById("resultMessage").textContent=correct>=5?"Excelente trabalho! Você demonstrou conhecimento sobre a saúde da tireoide.":correct>=3?"Muito bem! Você aprendeu informações importantes. Continue explorando e aprendendo.":"Toda descoberta começa com uma pergunta. Jogue novamente para reforçar seus conhecimentos.";
+
+ document.getElementById("review").innerHTML="";
+
+ questions.forEach((q,i)=>{
+
+  const p=document.createElement("p");
+
+  p.textContent=(results[i].correct?"✅ ":"📘 ")+q.topic+": "+q.explain;
+
+  document.getElementById("review").appendChild(p);
+
+ });
+
+}
+
+</script>
+
+</body>
+
+</html>
